@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Post;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Emargareten\InertiaModal\Modal;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,15 +29,40 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return Inertia::render('Dashboard', [
+        'posts' => Post::with('user')->get()
+    ]);
+    /*
+    return Inertia::render('Dashboard', [
+        'posts' => [[
+            'id' => 1,
+            'user' => [
+                'email' => 'edgararaj@gmail.com',
+                'name' => 'Edgar Araujo',
+                'imageUrl' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
+            ]
+        ],
+    [
+        'id' => 1,
+        'user' => [
+            'email' => 'edgararaj@gmail.com',
+            'name' => 'Edgar Araujo',
+            'imageUrl' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
+        ]
+    ]]
+]);
+    */
+}
+)->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::apiResource('post', \App\Http\Controllers\PostController::class);
+    // Route::apiResource('post', \App\Http\Controllers\PostController::class);
+
+    Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
 });
 
 require __DIR__.'/auth.php';
