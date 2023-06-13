@@ -35,7 +35,7 @@ defineProps({
         >
           Dashboard
         </h2>
-        <NavLink href="/post/create">New Post</NavLink>
+        <NavLink href="/posts/create">New Post</NavLink>
       </div>
     </template>
 

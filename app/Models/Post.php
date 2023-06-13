@@ -9,8 +9,10 @@ class Post extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'body',
+        'body', 'user_id'
     ];
 
     public function user()

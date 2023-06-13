@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -16,6 +16,9 @@ class PostController extends Controller
         //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return Inertia::modal('CreatePost')->baseRoute('dashboard');
@@ -26,13 +29,29 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = $request->validate([
+            'body' => 'required',
+        ]);
+
+        $post['user_id'] = $request->user()->id;
+
+        Post::create($post);
+
+        return redirect()->route('dashboard');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
         //
     }
@@ -40,7 +59,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -48,7 +67,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(string $id)
     {
         //
     }

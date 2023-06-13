@@ -60,9 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route::apiResource('post', \App\Http\Controllers\PostController::class);
-
-    Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
+    Route::resource('posts', PostController::class);
 });
 
 require __DIR__.'/auth.php';
