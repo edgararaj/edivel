@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Emargareten\InertiaModal\Modal;
+use App\Events\PlaygroundEvent;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('posts', PostController::class);
+
+    Route::get('/playground', function () {
+        event(new PlaygroundEvent());
+        return null;
+    });
 });
 
 require __DIR__.'/auth.php';

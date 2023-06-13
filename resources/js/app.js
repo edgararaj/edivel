@@ -7,6 +7,13 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '/vendor/tightenco/ziggy/dist/vue.m';
 import { modal } from '/vendor/emargareten/inertia-modal'
 
+const channel = Echo.channel('public.playground');
+channel.subscribed(()=>{
+  console.log("subscribed");
+}).listen(".playground", (event) => {
+  console.log(event);
+})
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
