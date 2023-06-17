@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Product;
+use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(1)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        Product::factory(20)->create();
+        Category::factory(5)->create();
+
+        $categories = Category::all();
+        Product::all()->each(function ($product) use ($categories) {
+            $product->categories()->attach(
+                $categories->random(2)->pluck('id')->toArray()
+            );
+        });
     }
 }

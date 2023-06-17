@@ -5,9 +5,14 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Post;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Emargareten\InertiaModal\Modal;
 use App\Events\PlaygroundEvent;
+use App\Http\Controllers\ProductController;
+use App\Models\Product;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +25,8 @@ use App\Events\PlaygroundEvent;
 |
 */
 
+Auth::loginUsingId(1);
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -30,8 +37,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard', [
-        'posts' => Post::with('user')->get()
+    return Inertia::render('Products/Index', [
+        'products' => Product::all()
     ]);
     /*
     return Inertia::render('Dashboard', [
@@ -61,7 +68,37 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/summary', function() {
+        return Inertia::render('Order/Summary');
+    })->name("summary");
+
+    Route::get('/checkout', function() {
+        return Inertia::render('Order/Checkout');
+    })->name("checkout");
     Route::resource('posts', PostController::class);
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+    Route::post('/api/purchase', function (Request $request) {
+        $user = User::where('email', Auth::user()->email)->first();
+        $payment = $user->charge(
+            $request->input('amount'),
+            $request->input('payment_method_id')
+        );
+
+        $payment = $payment->asStripePaymentIntent();
+        $order = $user->orders()->create([
+            'transaction_id' => $payment->charges->data[0]->id,
+            'total' => $payment->charges->data[0]->amount
+        ]);
+
+        foreach (json_decode($request->input('cart'), true) as $item) {
+            $order->products()->attach($item['id'], ['quantity' => $item['quantity']]);
+        }
+
+        $order->load('products');
+
+        return $order;
+    });
 
     Route::get('/playground', function () {
         event(new PlaygroundEvent());
