@@ -6,8 +6,11 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '/vendor/tightenco/ziggy/dist/vue.m';
 import { modal } from '/vendor/emargareten/inertia-modal'
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
+import createPersistedState from "vuex-persistedstate";
+import createMultiTabState from 'vuex-multi-tab-state';
 import axios from 'axios';
+import VuePaginate from 'vue-paginate'
 
 // const channel = Echo.channel('public.playground');
 // channel.subscribed(() => {
@@ -17,6 +20,7 @@ import axios from 'axios';
 // })
 
 const store = createStore({
+  plugins: [createMultiTabState()],
   state: {
     products: [],
     cart: [],
@@ -61,12 +65,17 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+  data: {
+    langs: ['JavaScript', 'PHP', 'HTML', 'CSS', 'Ruby', 'Python', 'Erlang'],
+    paginate: ['languages']
+  },
   setup({ el, App, props, plugin }) {
     return createApp({ render: () => h(App, props) })
       .use(modal, {
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
       })
       .use(store)
+      .use(VuePaginate)
       .use(plugin)
       .use(ZiggyVue, Ziggy)
       .mount(el);

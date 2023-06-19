@@ -38,7 +38,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Products/Index', [
-        'products' => Product::all()
+        'products' => Product::paginate(15)
     ]);
     /*
     return Inertia::render('Dashboard', [

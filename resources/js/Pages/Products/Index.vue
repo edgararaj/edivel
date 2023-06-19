@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Pagination from '@/Components/Pagination.vue'
 import { Head } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -17,9 +18,8 @@ const formatCurrency = ((price) => {
 
 defineProps({
   products: {
-    type: Array,
-    required: true,
-  },
+    type: Object
+  }
 });
 </script>
 
@@ -38,7 +38,7 @@ defineProps({
 
     <section class="text-gray-700 body-font">
       <div class="container px-5 py-24 mx-auto">
-        <div class="flex flex-wrap -m-4" v-if="!products.length">
+        <div class="flex flex-wrap -m-4" v-if="!products.data.length">
           <div class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4">
             <a class="block relative h-48 rounded overflow-hidden">
               <img alt="ecommerce" class="object-cover object-center w-full h-full block"
@@ -52,11 +52,10 @@ defineProps({
           </div>
         </div>
         <div class="flex flex-wrap -m-4" v-else>
-          <div class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4" v-for="product in products" :key="product.id">
-            <Link class="block relative h-48 rounded overflow-hidden"
-              :href="route('products.show', [product.id])">
-              <img alt="ecommerce" class="object-cover object-center w-full h-full block"
-                src="https://dummyimage.com/420x260">
+          <div class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4" v-for="product in products.data" :key="product.id">
+            <Link class="block relative h-48 rounded overflow-hidden" :href="route('products.show', [product.id])">
+            <img alt="ecommerce" class="object-cover object-center w-full h-full block"
+              src="https://dummyimage.com/420x260">
             </Link>
             <div class="mt-4">
               <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase inline-block mr-2"
@@ -66,6 +65,7 @@ defineProps({
             </div>
           </div>
         </div>
+        <pagination :links="products.links" />
       </div>
     </section>
   </AuthenticatedLayout>

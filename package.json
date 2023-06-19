@@ -28,7 +28,10 @@
         "@vitejs/plugin-vue": "^4.2.3",
         "laravel-echo": "^1.15.1",
         "pusher-js": "^8.1.0",
+        "vue-paginate": "^3.6.0",
         "vue-router": "^4.2.2",
-        "vuex": "^4.0.2"
+        "vuex": "^4.0.2",
+        "vuex-multi-tab-state": "^1.0.17",
+        "vuex-persistedstate": "^4.1.0"
     }
 }
