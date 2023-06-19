@@ -43,7 +43,7 @@ const processPayment = async () => {
     customer.amount = store.state.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     customer.cart = JSON.stringify(store.state.cart);
 
-    axios.post('/api/purchase', customer)
+    axios.post('/purchase', customer)
       .then((response) => {
         paymentProcessing.value = false;
         console.log(response);
