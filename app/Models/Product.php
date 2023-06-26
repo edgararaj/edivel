@@ -20,4 +20,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class);
     }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }
