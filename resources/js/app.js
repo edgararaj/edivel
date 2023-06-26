@@ -7,10 +7,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '/vendor/tightenco/ziggy/dist/vue.m';
 import { modal } from '/vendor/emargareten/inertia-modal'
 import { createStore } from 'vuex';
-import createPersistedState from "vuex-persistedstate";
 import createMultiTabState from 'vuex-multi-tab-state';
 import axios from 'axios';
-import VuePaginate from 'vue-paginate'
 
 // const channel = Echo.channel('public.playground');
 // channel.subscribed(() => {
@@ -75,7 +73,6 @@ createInertiaApp({
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
       })
       .use(store)
-      .use(VuePaginate)
       .use(plugin)
       .use(ZiggyVue, Ziggy)
       .mount(el);
