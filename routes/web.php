@@ -37,32 +37,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Products/Index', [
-        'products' => Product::paginate(15)
-    ]);
-    /*
-    return Inertia::render('Dashboard', [
-        'posts' => [[
-            'id' => 1,
-            'user' => [
-                'email' => 'edgararaj@gmail.com',
-                'name' => 'Edgar Araujo',
-                'imageUrl' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
-            ]
-        ],
-    [
-        'id' => 1,
-        'user' => [
-            'email' => 'edgararaj@gmail.com',
-            'name' => 'Edgar Araujo',
-            'imageUrl' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'
-        ]
-    ]]
-]);
-    */
-}
-)->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+// }
+// )->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('create-transaction', [PayPalController::class, 'createTransaction'])->name('createTransaction');
 Route::get('process-transaction', [PayPalController::class, 'processTransaction'])->name('processTransaction');
@@ -82,7 +59,8 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Order/Checkout');
     })->name("checkout");
 
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
     Route::post('/purchase', function (Request $request) {
         $user = User::where('email', Auth::user()->email)->first();

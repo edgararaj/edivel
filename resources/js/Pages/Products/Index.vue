@@ -53,7 +53,7 @@ defineProps({
         </div>
         <div class="flex flex-wrap -m-4" v-else>
           <div class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4" v-for="product in products.data" :key="product.id">
-            <Link class="block relative h-48 rounded overflow-hidden" :href="route('products.show', [product.id])">
+            <Link class="block relative h-48 rounded overflow-hidden" :href="route('products.show', [product.variants[0].slug])">
             <img alt="ecommerce" class="object-cover object-center w-full h-full block"
               src="https://dummyimage.com/420x260">
             </Link>
@@ -61,7 +61,7 @@ defineProps({
               <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase inline-block mr-2"
                 v-for="category in product.categories" v-text="category.name"></h3>
               <h2 class="text-gray-900 title-font text-lg font-medium" v-text="product.name"></h2>
-              <p class="mt-1" v-text="formatCurrency(product.price)"></p>
+              <p class="mt-1" v-text="formatCurrency(product.variants[0].price)"></p>
             </div>
           </div>
         </div>

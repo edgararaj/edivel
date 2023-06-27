@@ -21,15 +21,15 @@ const showingNavigationDropdown = ref(false);
             <div class="flex">
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
-                <Link :href="route('dashboard')">
+                <Link :href="route('products.index')">
                 <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                 </Link>
               </div>
 
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                  Dashboard
+                <NavLink :href="route('products.index')" :active="route().current('products.index')">
+                  Products
                 </NavLink>
               </div>
             </div>
@@ -95,8 +95,8 @@ const showingNavigationDropdown = ref(false);
           hidden: !showingNavigationDropdown,
         }" class="sm:hidden">
           <div class="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-              Dashboard
+            <ResponsiveNavLink :href="route('products.index')" :active="route().current('products.index')">
+              Products
             </ResponsiveNavLink>
           </div>
 

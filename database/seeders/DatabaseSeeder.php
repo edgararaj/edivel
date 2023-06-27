@@ -31,12 +31,9 @@ class DatabaseSeeder extends Seeder
         Product::all()->each(function ($product) use ($categories) {
             $variants = ProductVariant::factory(10)->make();
             $variants->each(function ($variant) use ($product, $variants) {
+                $slug = Str::slug($product->name . ' ' . $variant->color . ' '. $variant->size);
+                $variant->slug = $slug;
                 $product->variants()->save($variant);
-                $slug = Str::slug($product->pluck('name')->first() . ' ' . $variant->pluck('color')->first() . ' '. $variant->pluck('size')->first());
-                if ($variants->where('slug', $slug)->count() == 0) {
-                    $variant['slug'] = $slug;
-                    $variant->save();
-                }
             });
             $product->categories()->attach(
                 $categories->random(2)->pluck('id')->toArray()
