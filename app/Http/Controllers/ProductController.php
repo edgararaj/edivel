@@ -58,8 +58,9 @@ class ProductController extends Controller
             'allColors' => $allColors,
             'sizes' => $sizes,
             'allSizes' => $allSizes,
-            'product' => $product,
-            'variant' => $variant,
+            'product' => array_merge($variant->toArray(), [
+                'name' => $product->name
+            ]),
             // 'price' => $product->find($id)->variants()pluck('price')->toArray(),
             'options' => [
                 'color' => $variant->color,

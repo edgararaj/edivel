@@ -19,7 +19,6 @@ const formatCurrency = ((price) => {
 
 const props = defineProps({
   product: {},
-  variant: {},
   allColors: Array,
   allSizes: Array,
   colors: Array,
@@ -33,12 +32,12 @@ let currentSize = null;
 
 const sizeChanged = (value) => {
   currentSize = value
-  router.get(route('products.show', {slug: props.variant.slug}), {currentColor: currentColor, size: value, get: 1}, { preserveState: true, preserveScroll: true })
+  router.get(route('products.show', {slug: props.product.slug}), {currentColor: currentColor, size: value, get: 1}, { preserveState: true, preserveScroll: true })
 }
 
 const colorChanged = (value) => {
   currentColor = value
-  router.get(route('products.show', {slug: props.variant.slug}), {currentSize: currentSize, color: value, get: 1}, { preserveState: true, preserveScroll: true })
+  router.get(route('products.show', {slug: props.product.slug}), {currentSize: currentSize, color: value, get: 1}, { preserveState: true, preserveScroll: true })
 }
 
 </script>
@@ -77,7 +76,7 @@ const colorChanged = (value) => {
             <OptionToggle :values="sizes" :allValues="allSizes" :selected="options.size" :updateState="options.color !== null" @change="sizeChanged">
             </OptionToggle>
             <div class="flex mt-6 pt-4 border-t-2 border-gray-200">
-              <span class="title-font font-medium text-2xl text-gray-900" v-text="formatCurrency(variant.price)"></span>
+              <span class="title-font font-medium text-2xl text-gray-900" v-text="formatCurrency(product.price)"></span>
               <button
                 class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
                 @click="$store.commit('addToCart', product)">Add To Cart</button>
