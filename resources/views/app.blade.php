@@ -18,6 +18,4 @@
     <body class="font-sans antialiased">
         @inertia
     </body>
-    {{-- <script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR"></script> --}}
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 </html>

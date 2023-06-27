@@ -6,6 +6,7 @@ import { useStore } from "vuex";
 import { computed } from "@vue/reactivity";
 import { reactive, ref, onMounted, useAttrs } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
+import OptionToggle from '@/Components/OptionToggle.vue'
 
 const store = useStore();
 const attrs = useAttrs();
@@ -16,42 +17,62 @@ const paymentProcessing = ref(false);
 const customer = reactive(attrs.auth.user);
 const stripe = reactive({});
 
+const paymentOptions = ['Stripe', 'Paypal']
+const currentPaymentOption = ref('Stripe')
+
+const paymentOptionChanged = (e) => {
+  currentPaymentOption.value = e
+}
+
 const processPayment = async () => {
   paymentProcessing.value = true;
 
-  const { paymentMethod, error } = await stripe.value.createPaymentMethod(
-    'card', cardElement.value, {
-    billing_details: {
-      name: customer.name,
-      email: customer.email,
-      address: {
-        line1: customer.address,
-        city: customer.city,
-        state: customer.state,
-        postal_code: customer.postcode
+  if (currentPaymentOption.value == "Stripe") {
+    const { paymentMethod, error } = await stripe.value.createPaymentMethod(
+      'card', cardElement.value, {
+      billing_details: {
+        name: customer.name,
+        email: customer.email,
+        address: {
+          line1: customer.address,
+          city: customer.city,
+          state: customer.state,
+          postal_code: customer.postcode
+        }
       }
     }
+    );
+
+    if (error) {
+      paymentProcessing.value = false;
+      console.error(error);
+    } else {
+      console.log(paymentMethod);
+      customer.payment_method_id = paymentMethod.id;
+      customer.amount = store.state.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      customer.cart = JSON.stringify(store.state.cart);
+
+      axios.post('/purchase', customer)
+        .then((response) => {
+          paymentProcessing.value = false;
+          console.log(response);
+
+          store.commit('updateOrder', response.data);
+          store.dispatch('clearCart');
+
+          router.visit('/summary');
+        })
+        .catch((error) => {
+          paymentProcessing.value = false;
+          console.error(error);
+        });
+    }
   }
-  );
-
-  if (error) {
-    paymentProcessing.value = false;
-    console.error(error);
-  } else {
-    console.log(paymentMethod);
-    customer.payment_method_id = paymentMethod.id;
-    customer.amount = store.state.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    customer.cart = JSON.stringify(store.state.cart);
-
-    axios.post('/purchase', customer)
+  else {
+    router.get(route('processTransaction'))
       .then((response) => {
         paymentProcessing.value = false;
         console.log(response);
-
-        store.commit('updateOrder', response.data);
-        store.dispatch('clearCart');
-
-        router.visit('/summary');
       })
       .catch((error) => {
         paymentProcessing.value = false;
@@ -189,7 +210,10 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap -mx-2 mt-4">
+        <OptionToggle :values="paymentOptions" :allValues="paymentOptions" :selected="paymentOptions[0]"
+          @change="paymentOptionChanged" class="mt-5">
+        </OptionToggle>
+        <div class="flex flex-wrap -mx-2 mt-4" v-show="currentPaymentOption == 'Stripe'">
           <div class="p-2 w-full">
             <div class="relative">
               <label for="card-element" class="leading-7 text-sm text-gray-600">Credit Card Info</label>
