@@ -28,14 +28,14 @@ const store = createStore({
     updateProducts(state, products) {
       state.products = products;
     },
-    addToCart(state, product) {
+    addToCart(state, product, quantity) {
       let productInCartIndex = state.cart.findIndex(item => item.slug === product.slug);
       if (productInCartIndex !== -1) {
         state.cart[productInCartIndex].quantity++;
         return;
       }
 
-      product.quantity = 1;
+      product.quantity = quantity
       state.cart.push(product);
     },
     removeFromCart(state, index) {
