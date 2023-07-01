@@ -27,14 +27,14 @@ defineProps({
   <Head title="Products" />
 
   <AuthenticatedLayout>
-    <template #header>
+    <!-- <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
           Dashboard
         </h2>
         <NavLink href="/posts/create">New Post</NavLink>
       </div>
-    </template>
+    </template> -->
 
     <section class="text-gray-700 body-font">
       <div class="container px-5 py-24 mx-auto">

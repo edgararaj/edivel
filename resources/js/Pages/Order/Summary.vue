@@ -30,14 +30,14 @@ const orderTotal = computed(() => {
   <Head title="Product" />
 
   <AuthenticatedLayout>
-    <template #header>
+    <!-- <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
           Product
         </h2>
         <NavLink href="/posts/create">New Post</NavLink>
       </div>
-    </template>
+    </template> -->
     <div class="w-full">
       <div class="lg:w-2/3 w-full mx-auto mt-8 overflow-auto">
         <h2 class="text-sm title-font text-gray-500 tracking-widest" v-text="'Transaction ID: ' + order.transaction_id">

@@ -14,11 +14,17 @@ import QuantityInput from '@/Components/QuantityInput.vue'
 // const products = computed(() => store.state.products)
 
 const quantity = ref(1)
+const store = useStore()
 
 const formatCurrency = ((price) => {
   price = (price / 100);
   return price.toLocaleString('en-US', { style: 'currency', currency: 'EUR' });
 });
+
+const addToCart = (product) => {
+  product.quantity = quantity.value
+  store.commit('addToCart', product)
+}
 
 const props = defineProps({
   product: {},
@@ -35,12 +41,12 @@ let currentSize = null;
 
 const sizeChanged = (value) => {
   currentSize = value
-  router.get(route('products.show', { slug: props.product.slug }), { currentColor: currentColor, size: value, get: 1 }, { preserveState: true, preserveScroll: true })
+  router.get(route('products.show', { slug: props.product.slug }), { currentColor: currentColor, size: value, get: 1 }, { preserveState: true, preserveScroll: true, replace: true })
 }
 
 const colorChanged = (value) => {
   currentColor = value
-  router.get(route('products.show', { slug: props.product.slug }), { currentSize: currentSize, color: value, get: 1 }, { preserveState: true, preserveScroll: true })
+  router.get(route('products.show', { slug: props.product.slug }), { currentSize: currentSize, color: value, get: 1 }, { preserveState: true, preserveScroll: true, replace: true })
 }
 
 </script>
@@ -49,18 +55,18 @@ const colorChanged = (value) => {
   <Head title="Product" />
 
   <AuthenticatedLayout>
-    <template #header>
+    <!-- <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
           Product
         </h2>
         <NavLink href="/posts/create">New Post</NavLink>
       </div>
-    </template>
+    </template> -->
 
     <section class="text-gray-700 body-font overflow-hidden" v-if="product">
       <div class="container px-12 py-24 mx-auto">
-        <div class="lg:w-3/5 mx-auto flex flex-wrap">
+        <div class="lg:w-2/3 mx-auto flex flex-wrap">
           <img alt="ecommerce" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
             src="https://dummyimage.com/640x640">
           <div class="lg:w-1/2 w-full lg:pl-10 lg:py-0 py-6 lg:mt-0 mt-6">
@@ -102,7 +108,7 @@ const colorChanged = (value) => {
             </div>
             <button
               class="flex w-full text-white bg-indigo-500 border-0 py-2 px-6 mt-4 focus:outline-none hover:bg-indigo-600 rounded"
-              @click="$store.commit('addToCart', product, quantity)">
+              @click="addToCart(product)">
               <h1 class="ml-auto mr-auto">Add To Cart</h1>
             </button>
           </div>
